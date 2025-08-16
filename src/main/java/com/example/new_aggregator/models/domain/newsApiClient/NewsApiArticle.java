@@ -20,5 +20,5 @@ public class NewsApiArticle
     private String url;
     private String image;
     private String publishedAt;
-    private NewsApiSource newsApiSource;
+    private NewsApiSource source;
 }

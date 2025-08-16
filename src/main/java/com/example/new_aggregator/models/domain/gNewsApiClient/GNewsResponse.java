@@ -13,6 +13,6 @@ import java.util.List;
 @Getter
 public class GNewsResponse
 {
-    private List<GNewsArticle> gNewsArticles;
+    private List<GNewsArticle> articles;
     
 }

@@ -32,7 +32,7 @@ public class GlobalExceptionHandler
         log.error("NewsAggregatorException occurred: {}", exception.getMessage());
 
         ResponseDto<ErrorDto> response = new ResponseDto<>(
-                ResponseStatus.SUCCESS,
+                ResponseStatus.ERROR,
                 errorDto
         );
         

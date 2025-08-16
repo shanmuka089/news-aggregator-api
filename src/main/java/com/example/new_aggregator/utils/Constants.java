@@ -1,5 +1,9 @@
 package com.example.new_aggregator.utils;
 
+import com.example.new_aggregator.mapper.NewsAggregateMapper;
+import org.apache.catalina.mapper.Mapper;
+import org.mapstruct.factory.Mappers;
+
 public class Constants
 {
     public static final String API_KEY = "apikey";

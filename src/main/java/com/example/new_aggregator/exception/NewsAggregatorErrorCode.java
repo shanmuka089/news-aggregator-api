@@ -13,6 +13,7 @@ public enum NewsAggregatorErrorCode implements ErrorCode
     SERVICE_UNAVAILABLE("news-api-client-service-unavailable.code"),
     RATE_LIMIT_EXCEEDED("news-api-client-rate-limit-exceeded.code"),
     INVALID_API_KEY("news-api-client-invalid-api-key.code"),
+    PARSING_ERROR("news-api-client-parsing-error.code"),
     BAD_REQUEST("news-api-client-bad-request.code");
     
     String code;

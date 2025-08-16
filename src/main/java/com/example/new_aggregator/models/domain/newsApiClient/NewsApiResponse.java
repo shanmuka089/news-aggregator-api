@@ -15,5 +15,5 @@ import java.util.List;
 public class NewsApiResponse
 {
     private String status;
-    private List<NewsApiArticle> newsApiArticles;
+    private List<NewsApiArticle> articles;
 }

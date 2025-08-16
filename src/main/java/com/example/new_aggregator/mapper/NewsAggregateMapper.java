@@ -12,19 +12,19 @@ import com.example.new_aggregator.models.dto.NewsResponseDto;
 import com.example.new_aggregator.models.dto.SourceDto;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
+import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring")
 public interface NewsAggregateMapper
 {
-    @Mapping(target = "articles", source = "gNewsArticles")
+
+    NewsAggregateMapper INSTANCE = Mappers.getMapper(NewsAggregateMapper.class);
+    
     NewsResponseDto toNewsResponseDto(GNewsResponse gNewsResponse);
-    @Mapping(target = "sourceDto", source = "gNewsArticle.gNewsSource")
     ArticleDto toArticleDto(GNewsArticle gNewsArticle);
     SourceDto toSourceDto(GNewsSource gNewsSource);
     
-    @Mapping(target = "articles", source = "newsApiArticles")
     NewsResponseDto toNewsResponseDto(NewsApiResponse newsApiResponse);
-    @Mapping(target = "sourceDto", source = "newsApiArticle.newsApiSource")
     ArticleDto toArticleDto(NewsApiArticle newsApiArticle);
     SourceDto toSourceDto(NewsApiSource newsApiSource);
 

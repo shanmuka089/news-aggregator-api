@@ -33,7 +33,10 @@ public class ClientUtils
     {
         return UriComponentsBuilder.fromHttpUrl(baseUrl)
                 .path(path)
+                .queryParam("lang", queryDto.getLanguage())
+                .queryParam("country", queryDto.getCountry())
                 .queryParam("q", queryDto.getQuery())
+                .build(false)
                 .toUriString();
     }
 }

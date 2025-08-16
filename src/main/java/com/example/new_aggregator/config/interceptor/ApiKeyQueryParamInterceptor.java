@@ -32,7 +32,7 @@ public class ApiKeyQueryParamInterceptor implements ClientHttpRequestInterceptor
         
         URI newRequestUri = UriComponentsBuilder.fromUri(requestUri)
                 .queryParam(Constants.API_KEY, API_KEY_VALUE)
-                .build(false)
+                .build(true)
                 .toUri();
         
         HttpRequest newRequest = new HttpRequestWrapper(request) {

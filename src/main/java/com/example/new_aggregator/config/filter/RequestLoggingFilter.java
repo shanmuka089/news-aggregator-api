@@ -23,6 +23,7 @@ public class RequestLoggingFilter extends OncePerRequestFilter
                 request.getRequestURI(),
                 request.getRemoteAddr()
         );
+        filterChain.doFilter(request, response);
     }
 
 }

@@ -12,12 +12,12 @@ import lombok.Setter;
 public class GNewsArticle
 {
     private String id;
-    private String title;
     private String author;
+    private String title;
     private String description;
-    private String content;
     private String url;
+    private String content;
     private String image;
     private String publishedAt;
-    private GNewsSource gNewsSource;
+    private GNewsSource source;
 }

@@ -25,9 +25,8 @@ public class PreferenceEntity
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long preferenceId;
     
-    @OneToOne(mappedBy = "preference")
-    @JsonIgnore
-    private UserEntity userEntity;
+    @Column(nullable = false)
+    private Long userId;
 
     @Column(length = 100)
     private String category;
