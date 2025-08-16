@@ -7,14 +7,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 import org.springframework.web.client.DefaultResponseErrorHandler;
 
 import java.io.IOException;
 
 
 @Component
-public class DownStreamErrorHandler extends DefaultResponseErrorHandler
+public class ClientErrorResponseHandler extends DefaultResponseErrorHandler
 {
     private final ObjectMapper mapper = new ObjectMapper();
     
@@ -23,13 +22,25 @@ public class DownStreamErrorHandler extends DefaultResponseErrorHandler
     public void handleError(ClientHttpResponse response) throws IOException
     {
         HttpStatusCode status = response.getStatusCode();
-        
-        if(status.value() == HttpStatus.UNAUTHORIZED.value()) {
-            throw new NewsAggregatorException(NewsAggregatorErrorCode.INVALID_API_KEY);
-        } else if(status.value() == HttpStatus.BAD_REQUEST.value()) {
-            throw new NewsAggregatorException(NewsAggregatorErrorCode.BAD_REQUEST);
-        }else if(status.value() != HttpStatus.OK.value()) {
-            throw new NewsAggregatorException(NewsAggregatorErrorCode.SERVER_ERROR);
+        switch(status.value()) {
+            case 401:
+                throw new NewsAggregatorException(NewsAggregatorErrorCode.INVALID_API_KEY);
+            case 400:
+                throw new NewsAggregatorException(NewsAggregatorErrorCode.BAD_REQUEST);
+            case 403:
+                throw new NewsAggregatorException(NewsAggregatorErrorCode.FORBIDDEN);
+            case 429:
+                throw new NewsAggregatorException(NewsAggregatorErrorCode.RATE_LIMIT_EXCEEDED);
+            case 404:
+                throw new NewsAggregatorException(NewsAggregatorErrorCode.NOT_FOUND);
+            case 503:
+                throw new NewsAggregatorException(NewsAggregatorErrorCode.SERVICE_UNAVAILABLE);
+            case 500:
+                throw new NewsAggregatorException(NewsAggregatorErrorCode.INTERNAL_SERVER_ERROR);
+            default:
+                if (status.value() != 200) {
+                    throw new NewsAggregatorException(NewsAggregatorErrorCode.SERVER_ERROR);
+            }
         }
         
         String body = "";

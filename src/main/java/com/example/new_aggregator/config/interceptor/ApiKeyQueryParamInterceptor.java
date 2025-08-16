@@ -16,7 +16,7 @@ import java.net.URI;
 
 @Slf4j
 @Component
-public class ApiKeyInterceptor implements ClientHttpRequestInterceptor
+public class ApiKeyQueryParamInterceptor implements ClientHttpRequestInterceptor
 {
 
     @Value("${client.g-news.api-key}")

@@ -1,7 +1,8 @@
 package com.example.new_aggregator.config;
 
-import com.example.new_aggregator.config.errorHandling.DownStreamErrorHandler;
-import com.example.new_aggregator.config.interceptor.ApiKeyInterceptor;
+import com.example.new_aggregator.config.errorHandling.ClientErrorResponseHandler;
+import com.example.new_aggregator.config.interceptor.ApiKeyQueryParamInterceptor;
+import com.example.new_aggregator.config.interceptor.AuthorizationHeaderInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.context.annotation.Bean;
@@ -15,17 +16,31 @@ public class ApplicationConfig
 {
 
     @Autowired
-    private ApiKeyInterceptor apiKeyInterceptor;
+    private ApiKeyQueryParamInterceptor apiKeyQueryParamInterceptor;
     
     @Autowired
-    private DownStreamErrorHandler downStreamErrorHandler;
+    private ClientErrorResponseHandler clientErrorResponseHandler;
+    
+    @Autowired
+    private AuthorizationHeaderInterceptor authorizationHeaderInterceptor;
+    
     
     @Bean(name= "gNewsClient")
     public RestTemplate restTemplate(RestTemplateBuilder templateBuilder)
     {
         return templateBuilder
-                .interceptors(List.of(apiKeyInterceptor))
-                .errorHandler(downStreamErrorHandler)
+                .interceptors(List.of(apiKeyQueryParamInterceptor))
+                .errorHandler(clientErrorResponseHandler)
+                .build();
+    }
+    
+    @Bean(name = "newsApiClient")
+    public RestTemplate restTemplateWithAuthorizationHeader(RestTemplateBuilder templateBuilder)
+    {
+
+        return templateBuilder
+                .interceptors(List.of(authorizationHeaderInterceptor))
+                .errorHandler(clientErrorResponseHandler)
                 .build();
     }
     

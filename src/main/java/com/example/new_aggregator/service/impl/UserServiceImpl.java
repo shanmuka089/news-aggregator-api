@@ -13,6 +13,6 @@ public class UserServiceImpl implements UserService
 
     public void test() {
         System.out.println("User Service invoked");
-        gNewsClient.test();
+        gNewsClient.fetchNewsByQuery("");
     }
 }

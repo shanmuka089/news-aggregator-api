@@ -5,7 +5,11 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 @Entity
@@ -23,6 +27,9 @@ public class UserEntity
     private String email;
     private String password;
     
+    @OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<PreferenceEntity> preferences = new ArrayList<>();
+    
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name ="user_roles", 
             joinColumns = {
@@ -33,4 +40,10 @@ public class UserEntity
             }
     )
     private List<RoleEntity> roles;
+    
+    @CreationTimestamp
+    private Date createdAt;
+    
+    @UpdateTimestamp
+    private Date updatedAt;
 }
