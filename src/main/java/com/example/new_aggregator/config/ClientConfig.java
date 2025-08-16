@@ -12,10 +12,25 @@ import org.springframework.context.annotation.Configuration;
 public class ClientConfig
 {
     private GsClientConfig gsClient = new GsClientConfig();
+    private NewsApiClientConfig newsApiClient = new NewsApiClientConfig();
     
     @Setter
     @Getter
     public static class GsClientConfig {
-        public String gsClientSearchPath;
+        private String gsClientBaseUrl;
+        private String gsClientSearchPath;
+        private String gsClientTopHeadlinesPath;
+        private String gsClientSourcesPath;
     }
+
+    @Setter
+    @Getter
+    public static class NewsApiClientConfig {
+        public String newsApiBaseUrl;
+        public String newsApiSearchPath;
+        public String newsApiTopHeadlinesPath;
+        public String newsApiSourcesPath;
+    }
+    
+    
 }

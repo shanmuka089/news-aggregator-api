@@ -1,4 +1,4 @@
-package com.example.new_aggregator.models.domain;
+package com.example.new_aggregator.models.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +9,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Setter
 @Getter
-public class Source
+public class SourceDto
 {
     private String id;
     private String name;

@@ -1,5 +1,6 @@
 package com.example.new_aggregator.models.entities;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -8,7 +9,9 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
@@ -21,10 +24,10 @@ public class PreferenceEntity
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long preferenceId;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id", nullable = false)
-    private UserEntity userEntity; 
+    
+    @OneToOne(mappedBy = "preference")
+    @JsonIgnore
+    private UserEntity userEntity;
 
     @Column(length = 100)
     private String category;

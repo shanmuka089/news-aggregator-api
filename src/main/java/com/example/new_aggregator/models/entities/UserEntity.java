@@ -27,9 +27,6 @@ public class UserEntity
     private String email;
     private String password;
     
-    @OneToMany(mappedBy = "userEntity", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<PreferenceEntity> preferences = new ArrayList<>();
-    
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name ="user_roles", 
             joinColumns = {

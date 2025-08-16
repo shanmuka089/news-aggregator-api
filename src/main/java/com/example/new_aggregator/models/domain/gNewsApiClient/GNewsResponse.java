@@ -1,4 +1,4 @@
-package com.example.new_aggregator.models.domain;
+package com.example.new_aggregator.models.domain.gNewsApiClient;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -11,9 +11,8 @@ import java.util.List;
 @NoArgsConstructor
 @Setter
 @Getter
-public class NewsResponse {
-
-    private int totalArticles;
-    private List<Article> articles;
+public class GNewsResponse
+{
+    private List<GNewsArticle> gNewsArticles;
     
 }
