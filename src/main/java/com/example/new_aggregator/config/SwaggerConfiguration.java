@@ -2,6 +2,7 @@ package com.example.new_aggregator.config;
 
 import com.example.new_aggregator.exception.NewsAggregatorErrorCode;
 import com.example.new_aggregator.exception.NewsAggregatorException;
+import com.example.new_aggregator.models.dto.ErrorDto;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import io.swagger.v3.oas.models.ExternalDocumentation;
@@ -47,6 +48,7 @@ public class SwaggerConfiguration
                         new Server().url("http://localhost:8080/").description("Production"),
                         new Server().url("http://localhost:8080/").description("Staging")
                 ))
+                .schema("ErrorDto", new Schema<ErrorDto>())
                 .externalDocs(new ExternalDocumentation()
                         .description("Developer Guide")
                         .url("https://example.com/docs"))
@@ -54,7 +56,8 @@ public class SwaggerConfiguration
                         new Tag().name("News").description("Operations related to news articles"),
                         new Tag().name("Sources").description("Operations related to news sources"),
                         new Tag().name("Headlines").description("Operations related to news headlines"),
-                        new Tag().name("Users").description("Operations related to user management")
+                        new Tag().name("Users").description("Operations related to user management"),
+                        new Tag().name("Preferences").description("Operations related to user preferences")
                 ));
     }
 

@@ -15,13 +15,23 @@
   },
   "401": {
     "description": "Unauthorized",
-    "schema": "#/components/schemas/ErrorDto",
+    "schema": "/com/example/new_aggregator/models/dto/ErrorDto",
     "exampleName": "Unauthorized",
     "example": {
       "errorCode": "NEWS_API_CLIENT_UNAUTHORIZED",
       "message": "Error Message",
       "errorMessage": "internal Error Message"
     }
+  },
+  "403": {
+      "description": "Forbidden",
+      "schema": "#/components/schemas/ErrorDto",
+      "exampleName": "Forbidden",
+      "example": {
+      "errorCode": "NEWS_API_CLIENT_FORBIDDEN",
+      "message": "Error Message",
+      "errorMessage": "internal Error Message"
+      }
   },
   "404": {
     "description": "Not Found",
