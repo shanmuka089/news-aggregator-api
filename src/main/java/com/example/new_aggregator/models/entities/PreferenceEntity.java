@@ -1,6 +1,5 @@
 package com.example.new_aggregator.models.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,7 +8,6 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -28,11 +26,17 @@ public class PreferenceEntity
     @Column(nullable = false)
     private Long userId;
 
-    @Column(length = 100)
-    private String category;
+    @ManyToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
+    @JoinTable(name = "preference_categories",
+            joinColumns = @JoinColumn(name = "preference_id"),
+            inverseJoinColumns = @JoinColumn(name = "category_id"))
+    private List<CategoryEntity> categories;
 
-    @Column(length = 100)
-    private String source;
+    @ManyToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
+    @JoinTable(name = "source_preferences",
+            joinColumns = @JoinColumn(name = "source_id"),
+            inverseJoinColumns = @JoinColumn(name = "preference_id"))
+    private List<SourceEntity> sources;
 
     @Column(length = 10)
     private String language;

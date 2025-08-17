@@ -14,7 +14,9 @@ public enum NewsAggregatorErrorCode implements ErrorCode
     RATE_LIMIT_EXCEEDED("news-api-client-rate-limit-exceeded.code"),
     INVALID_API_KEY("news-api-client-invalid-api-key.code"),
     PARSING_ERROR("news-api-client-parsing-error.code"),
+    PREFERENCE_NOT_FOUND("news-api-client-preference-not-found.code"),
     BAD_REQUEST("news-api-client-bad-request.code");
+    
     
     String code;
     NewsAggregatorErrorCode(String code) {

@@ -26,9 +26,10 @@ public class NewsAggregatorServiceImpl implements NewsAggregatorService
     private NewsApiClient newsApiClient;
     
     @Override
-    public ResponseDto<NewsResponseDto> getNews()
+    public ResponseDto<NewsResponseDto> retrieveNewsFromVariousSources()
     {
-
+        
+        
         return null;
     }
 

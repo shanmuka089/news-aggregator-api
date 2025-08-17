@@ -3,9 +3,8 @@ package com.example.new_aggregator.models.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -14,21 +13,22 @@ import java.util.List;
 
 @AllArgsConstructor
 @NoArgsConstructor
-@Setter
-@Getter
+@Data
 @Entity
-@Table(name = "roles")
-public class RoleEntity
+@Table(name = "topics")
+public class TopicEntity
 {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long roleId;
-    private String roleName;
-
-    @ManyToMany(mappedBy = "roles")
+    private Long topicId;
+    private String name;
+    private String description;
+    private boolean enabled;
+    
+    @ManyToMany(mappedBy = "topics")
     @JsonIgnore
-    private List<UserEntity> users;
-
+    private List<CategoryEntity> categories;
+    
     @CreationTimestamp
     private Date createdAt;
 

@@ -6,6 +6,6 @@ import com.example.new_aggregator.models.dto.ResponseDto;
 
 public interface NewsAggregatorService
 {
-    ResponseDto<NewsResponseDto> getNews();
+    ResponseDto<NewsResponseDto> retrieveNewsFromVariousSources();
     ResponseDto<NewsResponseDto> getNewsByQuery(QueryDto query);
 }
