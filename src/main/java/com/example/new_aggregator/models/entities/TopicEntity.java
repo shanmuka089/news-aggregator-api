@@ -25,9 +25,9 @@ public class TopicEntity
     private String description;
     private boolean enabled;
     
-    @ManyToMany(mappedBy = "topics")
+    @ManyToOne
     @JsonIgnore
-    private List<CategoryEntity> categories;
+    private CategoryEntity categories;
     
     @CreationTimestamp
     private Date createdAt;

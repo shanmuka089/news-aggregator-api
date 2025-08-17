@@ -8,6 +8,7 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -23,20 +24,17 @@ public class PreferenceEntity
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long preferenceId;
     
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private Long userId;
 
-    @ManyToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
-    @JoinTable(name = "preference_categories",
-            joinColumns = @JoinColumn(name = "preference_id"),
-            inverseJoinColumns = @JoinColumn(name = "category_id"))
-    private List<CategoryEntity> categories;
+    @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
+    private List<CategoryEntity> categories = new ArrayList<>();
 
     @ManyToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
     @JoinTable(name = "source_preferences",
             joinColumns = @JoinColumn(name = "source_id"),
             inverseJoinColumns = @JoinColumn(name = "preference_id"))
-    private List<SourceEntity> sources;
+    private List<SourceEntity> sources = new ArrayList<>();
 
     @Column(length = 10)
     private String language;

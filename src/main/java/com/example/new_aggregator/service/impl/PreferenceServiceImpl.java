@@ -11,19 +11,26 @@ import com.example.new_aggregator.utils.NewsAggregatorUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class PreferenceServiceImpl implements PreferenceService
 {
+
     @Autowired
     private PreferenceRepository preferenceRepository;
+    
+    @Autowired
+    private NewsAggregatorUtils newsAggregatorUtils;
 
     @Override
     public PreferenceDto fetchPreferences()
     {
+
         Long userid = NewsAggregatorUtils.fetchCurrentUser().getUserId();
         PreferenceEntity preferenceEntity = preferenceRepository.findByUserId(userid)
                 .orElseThrow(() -> new NewsAggregatorException(NewsAggregatorErrorCode.PREFERENCE_NOT_FOUND));
-        
+
         PreferenceDto preferenceDto = PreferenceDtoMapper.INSTANCE.toDto(preferenceEntity);
         return preferenceDto;
     }
@@ -31,20 +38,22 @@ public class PreferenceServiceImpl implements PreferenceService
     @Override
     public PreferenceDto updatePreference(PreferenceDto preferenceDto)
     {
+
         Long userid = NewsAggregatorUtils.fetchCurrentUser().getUserId();
-        
-        if(userid != preferenceDto.getUserId()) {
+
+        if(userid != preferenceDto.getUserId())
+        {
             throw new NewsAggregatorException(NewsAggregatorErrorCode.FORBIDDEN);
         }
-        
+
         PreferenceEntity preferenceEntity = preferenceRepository.findByUserId(userid).orElseThrow(() -> new NewsAggregatorException(NewsAggregatorErrorCode.PREFERENCE_NOT_FOUND));
-        
-        NewsAggregatorUtils.updateEntityFromDto(preferenceDto, preferenceEntity);
+
+        newsAggregatorUtils.updateEntityFromDto(preferenceDto, preferenceEntity);
 
         PreferenceEntity updatedPreference = preferenceRepository.save(preferenceEntity);
-        
+
         PreferenceDto updatedPreferenceDto = PreferenceDtoMapper.INSTANCE.toDto(updatedPreference);
-        
+
         return updatedPreferenceDto;
     }
 
@@ -52,18 +61,35 @@ public class PreferenceServiceImpl implements PreferenceService
     public PreferenceDto savePreferences(PreferenceDto preferenceDto)
     {
 
-        PreferenceEntity preferenceEntity = PreferenceDtoMapper.INSTANCE.toEntity(preferenceDto);
         Long userid = NewsAggregatorUtils.fetchCurrentUser().getUserId();
-        preferenceEntity.setUserId(userid);
+        Optional<PreferenceEntity> OptPreferenceEntity = preferenceRepository.findByUserId(userid);
+
+        PreferenceEntity preferenceEntity;
+        
+        if(OptPreferenceEntity.isPresent())
+        {
+            preferenceEntity = OptPreferenceEntity.get();
+            newsAggregatorUtils.addCategoriesAndSourcesToExistingPreference(preferenceDto, preferenceEntity);
+        } 
+        else
+        {
+            preferenceEntity = PreferenceDtoMapper.INSTANCE.toEntity(preferenceDto);
+            preferenceEntity.getSources().forEach(source -> source.getPreferences().add(preferenceEntity));
+            preferenceEntity.getCategories().forEach(category -> category.setPreferences(preferenceEntity));
+            preferenceEntity.getCategories().forEach(category -> category.getTopics().forEach(topic -> topic.setCategories(category)));
+            preferenceEntity.setUserId(userid);
+        }
+
         PreferenceEntity savedPreference = preferenceRepository.save(preferenceEntity);
         PreferenceDto savedPreferenceDto = PreferenceDtoMapper.INSTANCE.toDto(savedPreference);
-        
+
         return savedPreferenceDto;
     }
 
     @Override
     public void deletePreferences(Long preferenceId)
     {
+
         preferenceRepository.deleteById(preferenceId);
     }
 

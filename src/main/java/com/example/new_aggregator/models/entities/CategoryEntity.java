@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -25,15 +26,12 @@ public class CategoryEntity
     private String description;
     private boolean enabled = true;
     
-    @ManyToMany(mappedBy = "categories")
+    @ManyToOne
     @JsonIgnore
-    private List<PreferenceEntity> preferences;
+    private PreferenceEntity preferences;
     
-    @ManyToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
-    @JoinTable(name = "category_topics",
-            joinColumns = @JoinColumn(name = "category_id"),
-            inverseJoinColumns = @JoinColumn(name = "topic_id"))
-    private List<TopicEntity> topics;
+    @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
+    private List<TopicEntity> topics = new ArrayList<>();
 
     @CreationTimestamp
     private Date createdAt;

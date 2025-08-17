@@ -20,10 +20,8 @@ public class PreferenceDto
     private Long preferenceId;
     private Long userId;
     
-    @NotBlank(message = "Category cannot be blank")
     private List<CategoryRequestDto> categories;
     
-    @NotBlank(message = "Source cannot be blank")
     private List<SourceRequestDto> sources;
     
     @JsonProperty(defaultValue = "en")
