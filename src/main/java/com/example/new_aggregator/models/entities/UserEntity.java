@@ -24,8 +24,13 @@ public class UserEntity
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long userId;
     private String username;
+    
+    @Column(nullable = false, unique = true, length = 100)
     private String email;
+    
     private String password;
+    private boolean disabled;
+    private boolean locked;
     
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(name ="user_roles", 
@@ -36,7 +41,7 @@ public class UserEntity
                 @JoinColumn(name="role_id")
             }
     )
-    private List<RoleEntity> roles;
+    private List<RoleEntity> roles = new ArrayList<>();
     
     @CreationTimestamp
     private Date createdAt;

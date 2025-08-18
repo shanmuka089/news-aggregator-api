@@ -17,6 +17,8 @@ public interface UserDtoMapper
     
     @Mapping(target = "password", ignore = true)
     @Mapping(target = "roles", ignore = true)
+    @Mapping(target = "locked", ignore = true)
+    @Mapping(target = "disabled", ignore = true)
     UserEntity toEntity(UserDto userDto);
     
     

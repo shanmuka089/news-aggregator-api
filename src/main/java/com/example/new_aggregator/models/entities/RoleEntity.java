@@ -9,6 +9,7 @@ import lombok.Setter;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -27,7 +28,7 @@ public class RoleEntity
 
     @ManyToMany(mappedBy = "roles")
     @JsonIgnore
-    private List<UserEntity> users;
+    private List<UserEntity> users = new ArrayList<>();
 
     @CreationTimestamp
     private Date createdAt;

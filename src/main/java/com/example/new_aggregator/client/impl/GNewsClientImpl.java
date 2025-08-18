@@ -6,14 +6,15 @@ import com.example.new_aggregator.config.ClientConfig;
 import com.example.new_aggregator.models.domain.gNewsApiClient.GNewsResponse;
 import com.example.new_aggregator.models.dto.QueryDto;
 import com.example.new_aggregator.models.dto.ResponseDto;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.*;
+import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestTemplate;
 
-@Slf4j
 @Component
 public class GNewsClientImpl implements GNewsClient
 {
@@ -24,12 +25,12 @@ public class GNewsClientImpl implements GNewsClient
     @Autowired
     private ClientConfig clientConfig;
     
-    public ResponseDto<GNewsResponse> fetchNewsByQuery(QueryDto query){
+    public ResponseDto<GNewsResponse> fetchNewsByPreference(QueryDto query){
 
         String baseUrl = clientConfig.getGsClient().getGsClientBaseUrl();
         String gsClientSearchPath = clientConfig.getGsClient().getGsClientSearchPath();
 
-        String url = ClientUtils.buildUrl(baseUrl, gsClientSearchPath, query);
+        String url = ClientUtils.buildUrl(baseUrl, gsClientSearchPath, query, true);
         
         ResponseEntity<GNewsResponse> responseEntity = restTemplate.exchange(
                 url,

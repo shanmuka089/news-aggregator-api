@@ -20,7 +20,7 @@ import java.util.List;
 public class CategoryEntity
 {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long categoryId;
     private String name;
     private String description;
@@ -30,7 +30,7 @@ public class CategoryEntity
     @JsonIgnore
     private PreferenceEntity preferences;
     
-    @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
+    @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY, mappedBy = "categories")
     private List<TopicEntity> topics = new ArrayList<>();
 
     @CreationTimestamp

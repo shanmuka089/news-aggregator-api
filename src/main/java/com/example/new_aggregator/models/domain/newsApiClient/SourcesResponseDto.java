@@ -11,10 +11,8 @@ import java.util.List;
 @NoArgsConstructor
 @Setter
 @Getter
-public class SourcesResponse
+public class SourcesResponseDto
 {
-    private String status;
-
     private List<Source> sources;
 
 }

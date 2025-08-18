@@ -20,7 +20,6 @@ public class ClientConfig
         private String gsClientBaseUrl;
         private String gsClientSearchPath;
         private String gsClientTopHeadlinesPath;
-        private String gsClientSourcesPath;
     }
 
     @Setter

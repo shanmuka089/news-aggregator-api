@@ -3,7 +3,6 @@ package com.example.new_aggregator.config.errorHandling;
 import com.example.new_aggregator.exception.NewsAggregatorErrorCode;
 import com.example.new_aggregator.exception.NewsAggregatorException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.stereotype.Component;

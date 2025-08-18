@@ -2,17 +2,14 @@ package com.example.new_aggregator.controller;
 
 
 import com.example.new_aggregator.models.dto.NewsResponseDto;
+import com.example.new_aggregator.models.dto.QueryDto;
 import com.example.new_aggregator.models.dto.ResponseDto;
 import com.example.new_aggregator.service.NewsAggregatorService;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-@Slf4j
+
 @RestController
 @RequestMapping("${spring.application.base-path}")
 public class NewsController
@@ -29,8 +26,38 @@ public class NewsController
     @GetMapping("/news")
     public ResponseEntity<ResponseDto<NewsResponseDto>> fetchNews() {
         
-        log.info("Fetching latest news articles from various sources");
         ResponseDto<NewsResponseDto> responseDto = newsAggregatorService.retrieveNewsFromVariousSources();
+        return ResponseEntity.ok(responseDto);
+        
+    }
+    
+    
+    /**
+     * Fetches news articles based on user-defined queries.
+     * This endpoint allows users to specify parameters such as category, language, country, topic, and source to filter news articles.
+     * @param category The category of news to fetch (e.g., sports, politics).
+     * @param language The language of the news articles (optional).
+     * @param country The country of the news articles (optional).
+     * @param topic The specific topic to search for in the news articles (optional).
+     * @param source The source of the news articles (optional).
+     * @return
+     */
+    @GetMapping("/news/{category}")
+    public ResponseEntity<ResponseDto<NewsResponseDto>> fetchNewsByQuery(@PathVariable("category") String category,
+                                                                        @RequestParam(value = "language", required = false) String language,
+                                                                        @RequestParam(value = "country", required = false) String country,
+                                                                        @RequestParam(value = "topic", required = false) String topic,
+                                                                        @RequestParam(value = "source", required = false) String source) {
+        
+        QueryDto queryDto = QueryDto.builder()
+                                    .category(category)
+                                    .language(language)
+                                    .country(country)
+                                    .query(topic)
+                                    .source(source)
+                                    .build();
+        
+        ResponseDto<NewsResponseDto> responseDto = newsAggregatorService.retriveNewsByQueryBasedOnUserInput(queryDto);
         return ResponseEntity.ok(responseDto);
         
     }

@@ -27,7 +27,7 @@ public class PreferenceEntity
     @Column(nullable = false, unique = true)
     private Long userId;
 
-    @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)
+    @OneToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY, mappedBy = "preferences")
     private List<CategoryEntity> categories = new ArrayList<>();
 
     @ManyToMany(cascade = {CascadeType.ALL}, fetch = FetchType.LAZY)

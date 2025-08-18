@@ -29,14 +29,18 @@ public class ClientUtils
         }
     }
     
-    public static String buildUrl(String baseUrl, String path, QueryDto queryDto)
+    public static String buildUrl(String baseUrl, String path, QueryDto queryDto, boolean isCountrySupported)
     {
-        return UriComponentsBuilder.fromHttpUrl(baseUrl)
+        UriComponentsBuilder uriBuilder = UriComponentsBuilder.fromHttpUrl(baseUrl)
                 .path(path)
                 .queryParam("lang", queryDto.getLanguage())
-                .queryParam("country", queryDto.getCountry())
-                .queryParam("q", queryDto.getQuery())
-                .build(false)
+                .queryParam("q", queryDto.getQuery());
+                
+                if(isCountrySupported && queryDto.getCountry() != null && !queryDto.getCountry().isEmpty()){
+                    uriBuilder.queryParam("country", queryDto.getCountry());
+                }
+                
+                return uriBuilder.build(false)
                 .toUriString();
     }
 }

@@ -89,7 +89,6 @@ public class PreferenceServiceImpl implements PreferenceService
     @Override
     public void deletePreferences(Long preferenceId)
     {
-
         preferenceRepository.deleteById(preferenceId);
     }
 

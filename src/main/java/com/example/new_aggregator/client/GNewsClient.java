@@ -7,5 +7,11 @@ import com.example.new_aggregator.models.dto.ResponseDto;
 public interface GNewsClient
 {
     
-    ResponseDto<GNewsResponse> fetchNewsByQuery(QueryDto query);
+    /**
+     * Fetches news from GNews API based on the provided query.
+     *
+     * @param query QueryDto containing the search parameters.
+     * @return ResponseDto containing GNewsResponse with the news data.
+     */
+    ResponseDto<GNewsResponse> fetchNewsByPreference(QueryDto query);
 }

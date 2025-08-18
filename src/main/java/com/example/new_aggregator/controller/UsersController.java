@@ -1,14 +1,15 @@
 package com.example.new_aggregator.controller;
 
-import com.example.new_aggregator.config.annotations.ApiResponseDto;
+import com.example.new_aggregator.models.dto.ResponseDto;
 import com.example.new_aggregator.models.dto.UserDto;
+import com.example.new_aggregator.service.AuthenticationService;
 import com.example.new_aggregator.service.UserService;
-import io.swagger.v3.oas.annotations.tags.Tag;
-import lombok.extern.slf4j.Slf4j;
+import com.example.new_aggregator.utils.ResponseStatus;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-@Slf4j
 @RestController
 @RequestMapping("${spring.application.base-path}")
 public class UsersController
@@ -16,32 +17,52 @@ public class UsersController
     @Autowired
     private UserService userService;
     
-    @PostMapping("/users/register")
-    public String registerUser(@RequestBody UserDto userDto)
+    @Autowired
+    private AuthenticationService authenticationService;
+    
+    /**
+     * Registers a new user.
+     * @param userDto UserDto containing user details to be registered.
+     * @return ResponseEntity containing ResponseDto with UserDto and HTTP status CREATED.
+     */
+    @PostMapping("/users")
+    public ResponseEntity<ResponseDto<UserDto>> registerUser(@RequestBody UserDto userDto)
     {
-        userService.saveUser(userDto);
-        return "Test Successful";
+        UserDto user = userService.saveUser(userDto);
+        return new ResponseEntity<>(new ResponseDto<>(ResponseStatus.SUCCESS, user),HttpStatus.CREATED);
     }
     
+    /**
+     * Fetches the authenticated user's details.
+     * @return ResponseEntity containing ResponseDto with UserDto and HTTP status OK.
+     */
     @GetMapping("/users")
-    public String fetchAuthenticatedUser()
+    public ResponseEntity<ResponseDto<UserDto>> fetchAuthenticatedUser()
     {
-        userService.fetchUser();
-        return "Test Successful";
+        UserDto user = userService.fetchUser();
+        return new ResponseEntity<>(new ResponseDto<>(ResponseStatus.SUCCESS, user),HttpStatus.OK);
     }
     
+    /**
+     * Updates the authenticated user's details.
+     * @param userDto UserDto containing updated user details.
+     * @return ResponseEntity containing ResponseDto with UserDto and HTTP status OK.
+     */
     @PostMapping("/users/login")
-    public String loginUser(@RequestBody UserDto userDto)
+    public ResponseEntity<ResponseDto<String>> loginUser(@RequestBody UserDto userDto)
     {
-        userService.loginUser(userDto);
-        return "Login Successful";
+        String token = authenticationService.loginUser(userDto);
+        return new ResponseEntity<>(new ResponseDto<>(ResponseStatus.SUCCESS, token), HttpStatus.OK);
     }
     
+    /**
+     * Logs out the authenticated user.
+     * @return ResponseEntity containing ResponseDto with success message and HTTP status OK.
+     */
     @PostMapping("/users/logout")
-    public String logoutUser()
+    public ResponseEntity<ResponseDto<String>> logoutUser()
     {
-
-        userService.logoutUser();
-        return "Logout Successful";
+        authenticationService.logoutUser();
+        return new ResponseEntity<>(new ResponseDto<>(ResponseStatus.SUCCESS, "User logged out successfully"), HttpStatus.OK);
     }
 }

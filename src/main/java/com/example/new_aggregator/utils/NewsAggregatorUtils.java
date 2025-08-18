@@ -9,6 +9,10 @@ import com.example.new_aggregator.models.entities.SourceEntity;
 import com.example.new_aggregator.models.entities.TopicEntity;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
 @Component
 public class NewsAggregatorUtils
 {
@@ -19,6 +23,57 @@ public class NewsAggregatorUtils
         return userDto;
     }
     
+    public static String buildUserSelectedCategoriesString(List<CategoryEntity> categories) {
+        StringBuilder categoriesString = new StringBuilder();
+        categories.forEach(category -> {
+            if (category.isEnabled()) {
+                if (categoriesString.length() > 0) {
+                    categoriesString.append(" OR ");
+                }
+                categoriesString.append(category.getName());
+            }
+        });
+        return categoriesString.toString();
+    }
+    
+    public static String buildUserSelectedTopicsString(List<CategoryEntity> categoryEntities) {
+        StringBuilder topicsString = new StringBuilder();
+        categoryEntities.forEach(category -> {
+            category.getTopics().forEach(topic -> {
+                if (topic.isEnabled()) {
+                    if (topicsString.length() > 0) {
+                        topicsString.append(" OR ");
+                    }
+                    topicsString.append(topic.getName());
+                }
+            });
+        });
+        return topicsString.toString();
+    }
+
+    public static QueryDto buildQuery(PreferenceEntity preference)
+    {
+
+        QueryDto queryDto = null;
+        if(preference != null) {
+            queryDto = QueryDto.builder()
+                    .language(preference.getLanguage())
+                    .country(preference.getRegion())
+                    .query(NewsAggregatorUtils.buildUserSelectedTopicsString(preference.getCategories()))
+                    .category(NewsAggregatorUtils.buildUserSelectedCategoriesString(preference.getCategories()))
+                    .build();
+        }
+        return queryDto;
+    }
+
+    public static NewsResponseDto mergeNewsResponses(List<ArticleDto>... articles)
+    {
+        List<ArticleDto> mergedArticles = Stream.of(articles)
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
+        return new NewsResponseDto(mergedArticles);
+    }
+
     public void updateEntityFromDto(PreferenceDto preferenceDto, PreferenceEntity preferenceEntity) {
         
         preferenceEntity.setEnabled(preferenceDto.isEnabled());

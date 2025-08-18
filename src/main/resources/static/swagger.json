@@ -341,11 +341,13 @@
                     "enabled": true,
                     "topics": [
                       {
+                        "topicId": 1, 
                         "name": "Artificial Intelligence",
                         "description": "AI advancements and news",
                         "enabled": false
                       },
                       {
+                        "topicId": 2,
                         "name": "Blockchain",
                         "description": "Blockchain technology updates",
                         "enabled": true
@@ -1229,6 +1231,346 @@
         "security": []
       }
     },
+    "/news/{category}": {
+      "get": {
+        "tags": [
+          "News Articles"
+        ],
+        "summary": "Get News Articles by Category",
+        "description": "Retrieves news articles based on a specific category",
+        "requestBody": {},
+        "parameters": [
+          {
+            "name": "category",
+            "in": "path",
+            "required": true,
+            "schema": {
+            "type": "string",
+            "default": "Sports"
+            },
+            "description": "Category of news articles to retrieve"
+          },
+          {
+            "name": "language",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "en"
+            },
+            "description": "Language of the news articles (default is 'en')"
+          },
+          {
+            "name": "country",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "in"
+            },
+            "description": "Country of the news articles (default is 'in')"
+          },
+          {
+            "name": "source",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "all"
+            },
+            "description": "Source of the news articles (default is 'all')"
+          },
+          {
+            "name": "topic",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "Cricket"
+            },
+            "description": "Topic of the news articles (default is 'Cricket')"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "News articles retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NewsResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                },
+                "examples": {
+                  "BadRequest": {
+                    "value": {
+                      "errorCode": "NEWS_API_CLIENT_BAD_REQUEST",
+                      "message": "Validation failed",
+                      "errorMessage": "Invalid input data"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                },
+                "examples": {
+                  "BadRequest": {
+                    "value": {
+                      "errorCode": "NEWS_API_CLIENT_UNAUTHORIZED",
+                      "message": "Unauthorized access",
+                      "errorMessage": "You must be logged in to access this resource"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                },
+                "examples": {
+                  "BadRequest": {
+                    "value": {
+                      "errorCode": "NEWS_API_CLIENT_FORBIDDEN",
+                      "message": "Access denied",
+                      "errorMessage": "You do not have permission to perform this action"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                },
+                "examples": {
+                  "BadRequest": {
+                    "value": {
+                      "errorCode": "NEWS_API_CLIENT_INTERNAL_SERVER_ERROR",
+                      "message": "An unexpected error occurred",
+                      "errorMessage": "Please try again later"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                },
+                "examples": {
+                  "BadRequest": {
+                    "value": {
+                      "errorCode": "NEWS_API_CLIENT_SERVICE_UNAVAILABLE",
+                      "message": "Service is currently unavailable",
+                      "errorMessage": "Please try again later"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": []
+      }
+    },
+    "/news-headlines/{category}": {
+      "get": {
+        "tags": [
+          "News Headlines"
+        ],
+        "summary": "Get News Headlines by Category",
+        "description": "Retrieves news headlines based on a specific category",
+        "requestBody": {},
+        "parameters": [
+          {
+            "name": "category",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "default": "Sports"
+            },
+            "description": "Category of news headlines to retrieve, e.g., 'Sports', 'Technology', etc."
+          },
+          {
+            "name": "language",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "en"
+            },
+            "description": "Language of the news headlines (default is 'en')"
+          },
+          {
+            "name": "country",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "in"
+            },
+            "description": "Country of the news headlines (default is 'in')"
+          },
+          {
+            "name": "source",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "all"
+            },
+            "description": "Source of the news headlines (default is 'all')"
+          },
+          {
+            "name": "topic",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "default": "Cricket"
+            },
+            "description": "Topic of the news headlines (default is 'Cricket')"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "News headlines retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NewsResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                },
+                "examples": {
+                  "BadRequest": {
+                    "value": {
+                      "errorCode": "NEWS_API_CLIENT_BAD_REQUEST",
+                      "message": "Validation failed",
+                      "errorMessage": "Invalid input data"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                },
+                "examples": {
+                  "BadRequest": {
+                    "value": {
+                      "errorCode": "NEWS_API_CLIENT_UNAUTHORIZED",
+                      "message": "Unauthorized access",
+                      "errorMessage": "You must be logged in to access this resource"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                },
+                "examples": {
+                  "BadRequest": {
+                    "value": {
+                      "errorCode": "NEWS_API_CLIENT_FORBIDDEN",
+                      "message": "Access denied",
+                      "errorMessage": "You do not have permission to perform this action"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                },
+                "examples": {
+                  "BadRequest": {
+                    "value": {
+                      "errorCode": "NEWS_API_CLIENT_INTERNAL_SERVER_ERROR",
+                      "message": "An unexpected error occurred",
+                      "errorMessage": "Please try again later"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                },
+                "examples": {
+                  "BadRequest": {
+                    "value": {
+                      "errorCode": "NEWS_API_CLIENT_SERVICE_UNAVAILABLE",
+                      "message": "Service is currently unavailable",
+                      "errorMessage": "Please try again later"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": []
+      }
+    },
     "/news-headlines": {
       "get": {
         "tags": [
@@ -1347,6 +1689,126 @@
         "parameters": [],
         "security": []
       }
+    },
+    "/news-headlines/sources": {
+      "get": {
+        "tags": [
+          "News Headlines"
+        ],
+        "summary": "Get News Headlines From Sources",
+        "description": "Retrieves news headlines based on user preferred sources",
+        "requestBody": {},
+        "responses": {
+          "200": {
+            "description": "News headlines retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SourceResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                },
+                "examples": {
+                  "BadRequest": {
+                    "value": {
+                      "errorCode": "NEWS_API_CLIENT_BAD_REQUEST",
+                      "message": "Validation failed",
+                      "errorMessage": "Invalid input data"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                },
+                "examples": {
+                  "BadRequest": {
+                    "value": {
+                      "errorCode": "NEWS_API_CLIENT_UNAUTHORIZED",
+                      "message": "Unauthorized access",
+                      "errorMessage": "You must be logged in to access this resource"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                },
+                "examples": {
+                  "BadRequest": {
+                    "value": {
+                      "errorCode": "NEWS_API_CLIENT_FORBIDDEN",
+                      "message": "Access denied",
+                      "errorMessage": "You do not have permission to perform this action"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                },
+                "examples": {
+                  "BadRequest": {
+                    "value": {
+                      "errorCode": "NEWS_API_CLIENT_INTERNAL_SERVER_ERROR",
+                      "message": "An unexpected error occurred",
+                      "errorMessage": "Please try again later"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                },
+                "examples": {
+                  "BadRequest": {
+                    "value": {
+                      "errorCode": "NEWS_API_CLIENT_SERVICE_UNAVAILABLE",
+                      "message": "Service is currently unavailable",
+                      "errorMessage": "Please try again later"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [],
+        "security": []
+      }
+
     }
   },
   "components": {
@@ -1604,6 +2066,50 @@
             "type": "string",
             "description": "Response code indicating success or failure",
             "example": "SUCCESS"
+          }
+        }
+      },
+      "SourceResponseDto": {
+        "type": "object",
+        "properties": {
+          "sources": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Source"
+            }
+          }
+        }
+      },
+      "Source": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the source"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the source"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the source"
+          },
+          "url": {
+            "type": "string",
+            "description": "URL of the source"
+          },
+          "category": {
+            "type": "string",
+            "description": "Category of the source"
+          },
+          "language": {
+            "type": "string",
+            "description": "Language of the source"
+          },
+          "country": {
+            "type": "string",
+            "description": "Country of the source"
           }
         }
       }
