@@ -13,6 +13,7 @@ public interface UserDtoMapper
     UserDtoMapper INSTANCE = Mappers.getMapper(UserDtoMapper.class);
     
     @Mapping(target = "password", ignore = true)
+    @Mapping(target = "roles", ignore = true)
     UserDto toDto(UserEntity userEntity);
     
     @Mapping(target = "password", ignore = true)

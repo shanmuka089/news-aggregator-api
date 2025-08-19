@@ -8,6 +8,7 @@ import com.example.new_aggregator.models.entities.RoleEntity;
 import com.example.new_aggregator.models.entities.UserEntity;
 import com.example.new_aggregator.repository.UserRepository;
 import com.example.new_aggregator.service.UserService;
+import com.example.new_aggregator.utils.Constants;
 import com.example.new_aggregator.utils.NewsAggregatorUtils;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;

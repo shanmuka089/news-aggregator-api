@@ -8,6 +8,7 @@ public enum NewsAggregatorErrorCode implements ErrorCode
     INTERNAL_SERVER_ERROR("news-api-client-internal-server-error.code"),
     SERVER_ERROR("news-api-client-server-error.code"),
     UNAUTHORIZED("news-api-client-unauthorized.code"),
+    INVALID_USER_OR_PASSWORD("news-api-client-invalid-user.code"),
     USER_NOT_FOUND("news-api-client-user-not-found.code"),
     FORBIDDEN("news-api-client-forbidden.code"),
     SERVICE_UNAVAILABLE("news-api-client-service-unavailable.code"),

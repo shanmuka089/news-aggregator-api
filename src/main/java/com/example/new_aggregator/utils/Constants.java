@@ -10,4 +10,5 @@ public class Constants
     public static final String CODE_SUFFIX = ".code";
     public static final String HTTP_SUFFIX = ".http";
     public static final String MESSAGE_SUFFIX = ".message";
+    public static final String SAMPLE_OTP = "111111";
 }

@@ -34,6 +34,10 @@
       "description": "Operations related to user registration, login, and management"
     },
     {
+      "name": "Authentication Management",
+      "description": "Operations related to user login, and logout"
+    },
+    {
       "name": "News Articles",
       "description": "Operations related to retrieving news articles based on user preferences"
     },
@@ -861,13 +865,75 @@
         "security": []
       }
     },
-    "/users/login": {
+    "/init": {
+      "get": {
+        "tags": [
+          "Authentication Management"
+        ],
+        "summary": "Initiate Pre-Auth",
+        "description": "",
+        "requestBody": {},
+          "responses": {
+            "200": {
+              "description": "Initiating the login session",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/AuthenticationResponseDto"
+                  }
+                }
+              }
+            },
+            "500": {
+              "description": "Internal Server Error",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorDto"
+                  },
+                  "examples": {
+                    "BadRequest": {
+                      "value": {
+                        "errorCode": "NEWS_API_CLIENT_INTERNAL_SERVER_ERROR",
+                        "message": "An unexpected error occurred",
+                        "errorMessage": "Please try again later"
+                      }
+                    }
+                  }
+                }
+              }
+            },
+            "503": {
+              "description": "Service Unavailable",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "$ref": "#/components/schemas/ErrorDto"
+                  },
+                  "examples": {
+                    "BadRequest": {
+                      "value": {
+                        "errorCode": "NEWS_API_CLIENT_SERVICE_UNAVAILABLE",
+                        "message": "Service is currently unavailable",
+                        "errorMessage": "Please try again later"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "parameters": [],
+          "security": []
+        }
+      },
+    "/authenticate": {
       "post": {
         "tags": [
-          "Users Management"
+          "Authentication Management"
         ],
         "summary": "Login User",
-        "description": "Logs in a user and returns an authentication token",
+        "description": "Validating a email & password",
         "requestBody": {
           "required": true,
           "content": {
@@ -883,11 +949,11 @@
           },
           "responses": {
             "200": {
-              "description": "User logged in successfully",
+              "description": "Credentials Validated successfully",
               "content": {
                 "application/json": {
                   "schema": {
-                    "$ref": "#/components/schemas/ResponseDto"
+                    "$ref": "#/components/schemas/AuthenticationResponseDto"
                   }
                 }
               }
@@ -993,7 +1059,268 @@
         }
       }
     },
-    "/users/logout": {
+    "/sendOtp": {
+      "post": {
+        "tags": [
+          "Authentication Management"
+        ],
+        "summary": "Send otp",
+        "description": "Send otp to user to complete successful authentication",
+        "parameters": [
+          {
+            "name": "otpType",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "default": "SMS"
+            },
+            "description": "Otp type to send"
+          }
+        ],
+        "requestBody": {},
+        "responses": {
+          "200": {
+            "description": "otp sent successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthenticationResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                },
+                "examples": {
+                  "BadRequest": {
+                    "value": {
+                      "errorCode": "NEWS_API_CLIENT_BAD_REQUEST",
+                      "message": "Validation failed",
+                      "errorMessage": "Invalid input data"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                },
+                "examples": {
+                  "BadRequest": {
+                    "value": {
+                      "errorCode": "NEWS_API_CLIENT_UNAUTHORIZED",
+                      "message": "Unauthorized access",
+                      "errorMessage": "You must be logged in to access this resource"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                },
+                "examples": {
+                  "BadRequest": {
+                    "value": {
+                      "errorCode": "NEWS_API_CLIENT_FORBIDDEN",
+                      "message": "Access denied",
+                      "errorMessage": "You do not have permission to perform this action"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                },
+                "examples": {
+                  "BadRequest": {
+                    "value": {
+                      "errorCode": "NEWS_API_CLIENT_INTERNAL_SERVER_ERROR",
+                      "message": "An unexpected error occurred",
+                      "errorMessage": "Please try again later"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                },
+                "examples": {
+                  "BadRequest": {
+                    "value": {
+                      "errorCode": "NEWS_API_CLIENT_SERVICE_UNAVAILABLE",
+                      "message": "Service is currently unavailable",
+                      "errorMessage": "Please try again later"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": []
+        }
+    },
+    "/validateOtp": {
+      "post": {
+        "tags": [
+          "Authentication Management"
+        ],
+        "summary": "Validate",
+        "description": "validate otp to complete authentication",
+        "parameters": [
+          {
+            "name": "otpValue",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "default": "111111"
+            },
+            "description": "Otp type to Verify"
+          }
+        ],
+        "requestBody": {},
+        "responses": {
+          "200": {
+            "description": "User logged in successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuthenticationResponseDto"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                },
+                "examples": {
+                  "BadRequest": {
+                    "value": {
+                      "errorCode": "NEWS_API_CLIENT_BAD_REQUEST",
+                      "message": "Validation failed",
+                      "errorMessage": "Invalid input data"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                },
+                "examples": {
+                  "BadRequest": {
+                    "value": {
+                      "errorCode": "NEWS_API_CLIENT_UNAUTHORIZED",
+                      "message": "Unauthorized access",
+                      "errorMessage": "You must be logged in to access this resource"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                },
+                "examples": {
+                  "BadRequest": {
+                    "value": {
+                      "errorCode": "NEWS_API_CLIENT_FORBIDDEN",
+                      "message": "Access denied",
+                      "errorMessage": "You do not have permission to perform this action"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                },
+                "examples": {
+                  "BadRequest": {
+                    "value": {
+                      "errorCode": "NEWS_API_CLIENT_INTERNAL_SERVER_ERROR",
+                      "message": "An unexpected error occurred",
+                      "errorMessage": "Please try again later"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "Service Unavailable",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorDto"
+                },
+                "examples": {
+                  "BadRequest": {
+                    "value": {
+                      "errorCode": "NEWS_API_CLIENT_SERVICE_UNAVAILABLE",
+                      "message": "Service is currently unavailable",
+                      "errorMessage": "Please try again later"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "parameters": [],
+        "security": []
+        }
+      },
+    "/logout-user": {
       "post": {
         "tags": [
           "Users Management"
@@ -2112,7 +2439,30 @@
             "description": "Country of the source"
           }
         }
+      },
+      "AuthenticationResponseDto": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "object",
+            "$ref": "#/components/schemas/ResponseStatus",
+            "description": "Status of the authentication process"
+          },
+          "currentStep": {
+            "type": "string",
+            "description": "Current step in the authentication flow"
+          },
+          "nextStep": {
+            "type": "string",
+            "description": "Next step in the authentication flow"
+          },
+          "data": {
+            "description": "Generic response payload",
+            "type": "object"
+          }
+        }
       }
+
     }
   }
 }
