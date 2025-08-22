@@ -1,10 +1,14 @@
 package com.example.new_aggregator.config;
 
+import com.example.new_aggregator.models.dto.RoleDto;
 import com.example.new_aggregator.models.dto.UserDto;
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -12,10 +16,10 @@ import java.util.List;
 @Component
 public class JwtUtils
 {
-    @Autowired
-    private String SECRET_KEY;
+    private static ObjectMapper objectMapper = new ObjectMapper();
+    private static final String SECRET_KEY = "DIOFHUIWHKNCSAILHOHLXCSNJNCBDVJKGKLDbNKRMNLSADSNKJEBEWHKJEBVKNLEWCDBVFKJ";
 
-    public String encodeToken(UserDto userDto) {
+    public static String encodeToken(UserDto userDto) {
         String token = Jwts.builder()
                 .subject(userDto.getUsername())
                 .claim("userId", userDto.getUserId())
@@ -28,7 +32,7 @@ public class JwtUtils
         return token;
     }
     
-    public boolean verifyToken(String token) {
+    public static boolean verifyToken(String token) {
         try {
             Jwts.parser()
                     .setSigningKey(SECRET_KEY)
@@ -41,7 +45,7 @@ public class JwtUtils
         }
     }
     
-    public UserDto decodeToken(String token) {
+    public static UserDto decodeToken(String token) {
         Claims claims = Jwts.parser()
                 .setSigningKey(SECRET_KEY)
                 .build()
@@ -51,8 +55,12 @@ public class JwtUtils
         UserDto userDto = new UserDto();
         userDto.setUsername(claims.getSubject());
         userDto.setEmail(claims.get("email", String.class));
-        userDto.setRoles(claims.get("roles", List.class));
         userDto.setUserId(claims.get("userId", Long.class));
+        userDto.setExpirationTime(claims.get("expiration", Long.class));
+        
+        List<RoleDto> roles = objectMapper.convertValue(claims.get("roles"), new TypeReference<List<RoleDto>>() {});
+        
+        userDto.setRoles(roles);
         
         return userDto;
     }

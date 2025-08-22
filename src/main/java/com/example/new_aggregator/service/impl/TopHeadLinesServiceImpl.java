@@ -13,6 +13,7 @@ import com.example.new_aggregator.models.domain.newsApiClient.SourcesResponseDto
 import com.example.new_aggregator.models.dto.NewsResponseDto;
 import com.example.new_aggregator.models.dto.QueryDto;
 import com.example.new_aggregator.models.dto.ResponseDto;
+import com.example.new_aggregator.models.dto.UserDto;
 import com.example.new_aggregator.models.entities.PreferenceEntity;
 import com.example.new_aggregator.models.entities.SourceEntity;
 import com.example.new_aggregator.repository.PreferenceRepository;
@@ -24,6 +25,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -48,7 +50,7 @@ public class TopHeadLinesServiceImpl implements TopHeadLinesService
     {
         Long userId = NewsAggregatorUtils.fetchCurrentUser().getUserId();
 
-        PreferenceEntity preference = preferenceRepository.findByUserId(userId).orElseGet(null);
+        PreferenceEntity preference = preferenceRepository.findByUserId(userId).orElse(null);
 
         QueryDto queryDto = NewsAggregatorUtils.buildQuery(preference);
 
@@ -66,6 +68,11 @@ public class TopHeadLinesServiceImpl implements TopHeadLinesService
     @Override
     public ResponseDto<NewsResponseDto> fetchTopHeadlines(QueryDto queryDto)
     {
+        UserDto userDto = NewsAggregatorUtils.fetchCurrentUser();
+        PreferenceEntity preferenceEntity = preferenceRepository.findByUserId(userDto.getUserId()).orElse(null);
+        
+        NewsAggregatorUtils.validateAndBuildQuery(queryDto, preferenceEntity);
+        
         GNewsResponse newsResponse = gNewsHeadLinesClient.fetchHeadlinesByQuery(queryDto).getData();
         NewsApiResponse newsApiResponse = newsApiHeadLinesClient.fetchHeadlinesByQuery(queryDto).getData();
 
@@ -89,7 +96,7 @@ public class TopHeadLinesServiceImpl implements TopHeadLinesService
         
         ResponseDto<SourcesResponseDto> sourceResponse = newsApiClientSource.fetchNewsBySources(queryDto);
 
-        List<String> preferredSources = preference.getSources().stream().map(SourceEntity ::getName).map(String::toLowerCase).collect(Collectors.toList());
+        List<String> preferredSources = preference == null ? List.of() : preference.getSources().stream().map(SourceEntity ::getName).map(String::toLowerCase).collect(Collectors.toList());
         
         // if the user has no preferred sources, return all sources
         if(!preferredSources.isEmpty()) {

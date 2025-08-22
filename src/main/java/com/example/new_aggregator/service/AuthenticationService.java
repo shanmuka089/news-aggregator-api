@@ -5,13 +5,6 @@ import jakarta.servlet.http.HttpServletRequest;
 
 public interface AuthenticationService
 {
-
-    /**
-     * Initiating Session
-     * @param request
-     * @return
-     */
-    String initAuth(HttpServletRequest request);
     
     /**
      * Logs in a user with the provided credentials.
@@ -22,18 +15,11 @@ public interface AuthenticationService
     String loginUser(UserDto userDto);
 
     /**
-     * Sending OTp
-     * @param otpType
-     * @return
+     * Verifies the email of the currently authenticated user.
+     * This method should be called after the user has logged in and needs to confirm their email address.
      */
-    String sendOtp(String otpType);
-
-    /**
-     * Validating Otp
-     * @param otp
-     * @return
-     */
-    String validateOtp(String otp);
+    void verifyEmail(Long userId);
+    
     
     /**
      * Logs out the currently authenticated user.

@@ -18,4 +18,8 @@ public class ResponseDto<T>
     public T getData() {
         return data;
     }
+    
+    public static <T> ResponseDto<T> success(T data) {
+        return new ResponseDto<>(ResponseStatus.SUCCESS, data);
+    }
 }

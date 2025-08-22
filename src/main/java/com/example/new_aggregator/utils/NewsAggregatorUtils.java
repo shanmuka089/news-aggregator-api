@@ -7,6 +7,7 @@ import com.example.new_aggregator.models.entities.CategoryEntity;
 import com.example.new_aggregator.models.entities.PreferenceEntity;
 import com.example.new_aggregator.models.entities.SourceEntity;
 import com.example.new_aggregator.models.entities.TopicEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -19,7 +20,15 @@ public class NewsAggregatorUtils
     
     public static UserDto fetchCurrentUser() {
         UserDto userDto = new UserDto();
-        userDto.setUserId(1L);
+        Object details = SecurityContextHolder.getContext().getAuthentication().getDetails();
+            if (details instanceof UserDto) {
+                UserDto currentUser = (UserDto) details;
+                userDto.setUserId(currentUser.getUserId());
+                userDto.setUsername(currentUser.getUsername());
+                userDto.setEmail(currentUser.getEmail());
+                userDto.setRoles(currentUser.getRoles());
+                userDto.setExpirationTime(currentUser.getExpirationTime());
+            }
         return userDto;
     }
     
@@ -62,6 +71,13 @@ public class NewsAggregatorUtils
                     .query(NewsAggregatorUtils.buildUserSelectedTopicsString(preference.getCategories()))
                     .category(NewsAggregatorUtils.buildUserSelectedCategoriesString(preference.getCategories()))
                     .build();
+        } else {
+            queryDto = QueryDto.builder()
+                    .language("en")
+                    .country("us")
+                    .query("Cricket")
+                    .query("Sports")
+                    .build();
         }
         return queryDto;
     }
@@ -72,6 +88,22 @@ public class NewsAggregatorUtils
                 .flatMap(List::stream)
                 .collect(Collectors.toList());
         return new NewsResponseDto(mergedArticles);
+    }
+
+    public static void validateAndBuildQuery(QueryDto queryDto, PreferenceEntity preferenceEntity)
+    {
+        if (queryDto.getCategory() == null || queryDto.getCategory().isEmpty()) {
+            queryDto.setCategory(NewsAggregatorUtils.buildUserSelectedCategoriesString(preferenceEntity.getCategories()));
+        }
+        if (queryDto.getQuery() == null || queryDto.getQuery().isEmpty()) {
+            queryDto.setQuery(NewsAggregatorUtils.buildUserSelectedTopicsString(preferenceEntity.getCategories()));
+        }
+        if (queryDto.getLanguage() == null || queryDto.getLanguage().isEmpty()) {
+            queryDto.setLanguage(preferenceEntity.getLanguage());
+        }
+        if (queryDto.getCountry() == null || queryDto.getCountry().isEmpty()) {
+            queryDto.setCountry(preferenceEntity.getRegion());
+        }   
     }
 
     public void updateEntityFromDto(PreferenceDto preferenceDto, PreferenceEntity preferenceEntity) {

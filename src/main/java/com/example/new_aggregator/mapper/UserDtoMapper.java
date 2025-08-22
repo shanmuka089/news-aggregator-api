@@ -14,6 +14,7 @@ public interface UserDtoMapper
     
     @Mapping(target = "password", ignore = true)
     @Mapping(target = "roles", ignore = true)
+    @Mapping(target = "expirationTime", ignore = true)
     UserDto toDto(UserEntity userEntity);
     
     @Mapping(target = "password", ignore = true)

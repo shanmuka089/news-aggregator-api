@@ -30,15 +30,6 @@ public class AuthenticationServiceImpl implements AuthenticationService
     @Autowired
     private PasswordEncoder passwordEncoder;
     
-    @Autowired
-    private JwtUtils jwtUtils;
-
-    @Override
-    public String initAuth(HttpServletRequest request)
-    {
-
-        return null;
-    }
 
     @Override
     public String loginUser(UserDto userDto)
@@ -56,26 +47,24 @@ public class AuthenticationServiceImpl implements AuthenticationService
          userDto.setRoles(roles);
          userDto.setUsername(userEntity.getUsername());
          
-        return jwtUtils.encodeToken(userDto);
+        return JwtUtils.encodeToken(userDto);
     }
+    
 
     @Override
-    public String sendOtp(String otpType)
+    public void verifyEmail(Long userId)
     {
-
-        return null;
-    }
-
-    @Override
-    public String validateOtp(String otp)
-    {
-
-        return null;
+        userRepository.findById(userId).ifPresentOrElse(userEntity -> {
+            userEntity.setDisabled(false);
+            userRepository.save(userEntity);
+        }, () -> {
+            throw new NewsAggregatorException(NewsAggregatorErrorCode.USER_NOT_FOUND);
+        });
     }
 
     @Override
     public void logoutUser()
     {
-
+        
     }
 }

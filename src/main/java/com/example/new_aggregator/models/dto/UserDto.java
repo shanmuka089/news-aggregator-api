@@ -19,6 +19,7 @@ public class UserDto
     private String username;
     private String email;
     private String password;
+    private Long expirationTime;
     private List<RoleDto> roles;
     private Date createdAt;
     private Date updatedAt;

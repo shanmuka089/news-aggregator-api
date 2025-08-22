@@ -8,6 +8,7 @@ import com.example.new_aggregator.models.domain.newsApiClient.NewsApiResponse;
 import com.example.new_aggregator.models.dto.NewsResponseDto;
 import com.example.new_aggregator.models.dto.QueryDto;
 import com.example.new_aggregator.models.dto.ResponseDto;
+import com.example.new_aggregator.models.dto.UserDto;
 import com.example.new_aggregator.models.entities.PreferenceEntity;
 import com.example.new_aggregator.repository.PreferenceRepository;
 import com.example.new_aggregator.service.NewsAggregatorService;
@@ -36,7 +37,7 @@ public class NewsAggregatorServiceImpl implements NewsAggregatorService
     {
         Long userId = NewsAggregatorUtils.fetchCurrentUser().getUserId();
         
-        PreferenceEntity preference = preferenceRepository.findByUserId(userId).orElseGet(null);
+        PreferenceEntity preference = preferenceRepository.findByUserId(userId).orElse(null);
 
         QueryDto queryDto = NewsAggregatorUtils.buildQuery(preference);
 
@@ -54,6 +55,11 @@ public class NewsAggregatorServiceImpl implements NewsAggregatorService
     @Override
     public ResponseDto<NewsResponseDto> retriveNewsByQueryBasedOnUserInput(QueryDto queryDto)
     {
+        UserDto userDto = NewsAggregatorUtils.fetchCurrentUser();
+        PreferenceEntity preferenceEntity = preferenceRepository.findByUserId(userDto.getUserId()).orElse(null);
+
+        NewsAggregatorUtils.validateAndBuildQuery(queryDto, preferenceEntity);
+        
         GNewsResponse newsResponse = gNewsClient.fetchNewsByPreference(queryDto).getData();
         NewsApiResponse newsApiResponse = newsApiClient.fetchNewsByPreference(queryDto).getData();
 
