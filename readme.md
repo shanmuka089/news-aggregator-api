@@ -59,11 +59,5 @@ Open your browser and navigate to:
 http://localhost:8080/swagger-ui.html
 ```
 
-### Access H2 Console
-Open your browser and navigate to:
-```
-http://localhost:8080/h2-console
-```
-
 ### Database Design
 ![Database_Dsign.png](Database_Dsign.png)
