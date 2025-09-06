@@ -1,12 +1,13 @@
 plugins {
 	id 'java'
-	id 'org.springframework.boot' version '3.5.4'
-	id 'io.spring.dependency-management' version '1.1.7'
+	id 'org.springframework.boot' version "${springBootVersion}"
+	id 'io.spring.dependency-management' version "${springDependencyManagement}"
 	id 'application'
+	id 'jacoco'
 }
 
 group = 'com.example'
-version = '0.0.1-SNAPSHOT'
+version = "${appVersion}"
 description = 'Demo project for Spring Boot'
 
 java {
@@ -27,21 +28,88 @@ repositories {
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-//	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.springframework.boot:spring-boot-starter-security'
+	implementation 'org.mapstruct:mapstruct:1.6.3'
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.8.5'
+	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'org.springframework.boot:spring-boot-starter-actuator'
+	implementation "com.mysql:mysql-connector-j:9.3.0"
+	implementation 'io.jsonwebtoken:jjwt-api:0.12.7'
+	
 	compileOnly 'org.projectlombok:lombok'
+	
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
+	
 	runtimeOnly 'com.h2database:h2:2.3.232'
+	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.12.7'
+	runtimeOnly 'io.jsonwebtoken:jjwt-jackson:0.12.7'
+	
 	annotationProcessor 'org.projectlombok:lombok'
+	annotationProcessor 'org.mapstruct:mapstruct-processor:1.6.3'
+	annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
+	
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
-//	testImplementation 'org.springframework.security:spring-security-test'
+	testImplementation 'org.springframework.security:spring-security-test'
 	testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
 }
 
-tasks.named('test') {
-	useJUnitPlatform()
-}
 
 application {
 	mainClass.set('com.example.new_aggregator.NewsAggregatorApplication')
+}
+
+jacoco {
+	toolVersion = "0.8.12"
+}
+
+jacocoTestReport {
+	reports {
+		xml.required.set(true)
+		html.required.set(true)
+	}
+	dependsOn(test)
+	finalizedBy(jacocoTestCoverageVerification)
+}
+
+jacocoTestCoverageVerification {
+	violationRules {
+		rule {
+			limit {
+				minimum = 0.80
+			}
+		}
+	}
+}
+
+test {
+	finalizedBy(jacocoTestReport)
+}
+
+tasks.named('test', Test) {
+	useJUnitPlatform()
+	include('**/*Test.class', '**/*Tests.class')
+}
+
+ext.jacocoExcludes = [
+		'com/example/new_aggregator/config/**',
+		'com/example/new_aggregator/exception/**',
+		'com/example/new_aggregator/model/**',
+		'com/example/new_aggregator/mapper/**',
+		'com/example/new_aggregator/utils/**',
+		'**/NewsAggregatorApplication.class'
+]
+
+afterEvaluate {
+	
+	jacocoTestReport {
+		classDirectories.setFrom(files(classDirectories.files.collect { dir ->
+			fileTree(dir: dir, exclude: jacocoExcludes)
+		}))
+	}
+	jacocoTestCoverageVerification {
+		classDirectories.setFrom(files(classDirectories.files.collect { dir ->
+			fileTree(dir: dir, exclude: jacocoExcludes)
+		}))
+	}
 }
